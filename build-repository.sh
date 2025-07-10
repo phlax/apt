@@ -101,6 +101,7 @@ main () {
     else
         bazel_args+=(--//:production=//:true)
     fi
+    echo "BUILD REPO: ${bazel_args[*]}"
     bazel run \
           "${bazel_args[@]}" \
           //tools/tarball:unpack \

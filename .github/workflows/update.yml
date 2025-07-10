@@ -30,7 +30,7 @@ jobs:
         touch debs/excludes.txt
         echo ${{ github.token }} > debs/token.txt
         GNUPG_HOME="$(realpath ~/.gnupg)"
-        time bazel build "--sandbox_writable_path=${GNUPG_HOME}" --config=debs-ci //debs
+        time bazel build "--sandbox_writable_path=${GNUPG_HOME}" --verbose_failures --config=debs-ci //debs
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
