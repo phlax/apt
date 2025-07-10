@@ -18,11 +18,14 @@ jobs:
     if: github.repository_owner == 'envoyproxy'
     steps:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
+      with:
+        path: /mnt/workspace/apt-build
 
     - run: |
         mkdir ./debs/import
         gsutil -mq rsync -r gs://envoy-apt-cache/debs ./debs/import/
         ls -alh debs/import/
+      working-directory: /mnt/workspace/apt-build
 
     - run: |
         . ./build-repository.sh
@@ -33,6 +36,7 @@ jobs:
         time bazel build "--sandbox_writable_path=${GNUPG_HOME}" --verbose_failures --config=debs-ci //debs
       env:
         GITHUB_TOKEN: ${{ github.token }}
+      working-directory: /mnt/workspace/apt-build
 
     - uses: envoyproxy/toolshed/gh-actions/gcp/setup@actions-v0.3.14
       name: Setup GCP (cache)
@@ -42,3 +46,4 @@ jobs:
     - run: |
         gsutil -mq rsync -r ./bazel-bin/debs/debs/ gs://envoy-apt-cache/debs
       if: ${{ github.event_name != 'pull_request' }}
+      working-directory: /mnt/workspace/apt-build
