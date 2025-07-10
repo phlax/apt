@@ -20,14 +20,13 @@ jobs:
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
 
     - run: |
-        mkdir -p /mnt/workspace/apt/import
+        sudo mkdir -p /mnt/workspace/apt/import
         sudo chown -R runner:runner /mnt/workspace
         sudo mount -o bind /mnt/workspace/apt/import ./debs/import/
     - run: |
         mkdir ./debs/import
         gsutil -mq rsync -r gs://envoy-apt-cache/debs ./debs/import/
         ls -alh debs/import/
-
     - run: |
         . ./build-repository.sh
         import_public_key
